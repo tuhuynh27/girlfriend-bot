@@ -1,0 +1,36 @@
+.app-layout {
+  position: static;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 512px;
+  margin: auto;
+
+  .outlet-container {
+    height: calc(100vh - 48px - 48px);
+    position: relative;
+    display: grid;
+    grid-template: 1fr / 1fr;
+    background-color: #F6F7F8;
+  }
+}
+
+.fade-enter {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transform: translateX(0%);
+  transition: opacity 200ms ease-in;
+}
+.fade-exit {
+  opacity: 1;
+  transform: translateX(0%);
+}
+.fade-exit.fade-exit-active {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 200ms ease-in;
+}
