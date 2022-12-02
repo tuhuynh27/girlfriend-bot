@@ -13,11 +13,6 @@ function App({ profile = {
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
 
-  const handleInputFocus = () => {
-    // Scroll to top
-    messagesRef.current.scrollTop = 0
-  }
-
   const scrollToBottom = () => {
     if (messagesRef.current) {
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight
@@ -37,7 +32,6 @@ function App({ profile = {
 
   async function sendMsg() {
     if (message.trim() !== '') {
-      // botReply(process(message))
       setListMessages(l => [...l, {
         id: Math.random(),
         text: message,
@@ -108,7 +102,6 @@ function App({ profile = {
         <div className="bottom-bar">
           <textarea rows="1" placeholder="Nhập tin nhắn"
                     onKeyDown={handleKeyDown}
-                    onFocus={handleInputFocus}
                     value={message} onChange={e => setMessage(e.target.value)}/>
             <div className="send-button">
               <button disabled={message.length === 0 || isProcessing === true} onClick={() => sendMsg()}>Gửi</button>
