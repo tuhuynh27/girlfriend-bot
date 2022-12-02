@@ -77,7 +77,7 @@ function App({ profile = {
   return (
     <React.Fragment>
       <div className="messages-page">
-        <div className="top-bar" style={{ position: isInputFocusing ? 'absolute' : 'fixed' }}>
+        <div className="top-bar">
           <div className="back-button">
             <svg focusable="false" aria-hidden="true" role="presentation" viewBox="0 0 24 24" width="24px" height="24px">
               <path className="Fill($c-pink)"
@@ -102,16 +102,16 @@ function App({ profile = {
           </div>
         </div>
         <div className="bottom-bar" style={{ position: isInputFocusing ? 'absolute' : 'fixed' }}>
-        <textarea rows="1" placeholder="Nhập tin nhắn"
-                  onKeyDown={handleKeyDown}
-                  onFocus={() => setIsInputFocusing(true)}
-                  onBlur={() => setIsInputFocusing(false)}
-                  value={message} onChange={e => setMessage(e.target.value)}/>
-          <div className="send-button">
-            <button disabled={message.length === 0 || isProcessing === true} onClick={() => sendMsg()}>Gửi</button>
-          </div>
+          <textarea rows="1" placeholder="Nhập tin nhắn"
+                    onKeyDown={handleKeyDown}
+                    onFocus={() => setIsInputFocusing(true)}
+                    onBlur={() => setIsInputFocusing(false)}
+                    value={message} onChange={e => setMessage(e.target.value)}/>
+            <div className="send-button">
+              <button disabled={message.length === 0 || isProcessing === true} onClick={() => sendMsg()}>Gửi</button>
+            </div>
         </div>
-        {listMessages.length === 0 && <div className="no-message" onClick={() => setIsProfileOpen(true)} style={{ position: isInputFocusing ? 'absolute' : 'fixed' }}>
+        {listMessages.length === 0 && <div className="no-message" onClick={() => setIsProfileOpen(true)}>
           <div className="text">
             <h1>Đây là Bot của <strong>{profile.name}</strong></h1>
             <p>muốn nhắn gì thì nhắn đi</p>
@@ -119,7 +119,7 @@ function App({ profile = {
           <div className="image" style={{ backgroundImage: `url('${profile.image}')` }}/>
         </div>}
         {listMessages.length > 0 &&
-          <div className="conversation" ref={messagesRef} style={{ position: isInputFocusing ? 'absolute' : 'fixed' }}>
+          <div className="conversation" ref={messagesRef}>
             <ul>
               {listMessages.map(msg => (
                 <li key={msg.id} className={msg.isMe ? 'me' : 'him'}>
