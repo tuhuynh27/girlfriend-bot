@@ -3,6 +3,24 @@ import './App.scss'
 
 import ProfilePopup from './components/profile-popup/ProfilePopups.jsx'
 
+// Function to generate random UUID
+function uuidv4() {
+  return `xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx`.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0,
+      v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
+function init() {
+  if (!localStorage.getItem('uuid')) {
+    localStorage.setItem('uuid', uuidv4())
+    localStorage.setItem('date', new Date().getTime().toString())
+  }
+}
+
+init()
+
 function App({ profile = {
   name: 'Tu Huynh',
   image: 'https://d33wubrfki0l68.cloudfront.net/19e8b1005d45f56e2c10ad30e215298ce50c677e/6f09c/tu-huynh.jpg',
@@ -50,7 +68,14 @@ function App({ profile = {
   }
 
   async function getResponseFromAiBot(msg) {
-    const resp = await fetch(`https://ai-bot.tuhuynh.com/?text=${msg}`);
+    const resp = await fetch(`https://ai-bot.tuhuynh.com/?text=${msg}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        uuid: localStorage.getItem('uuid'),
+      }
+    });
     const json = await resp.json();
     return json.msg;
   }
