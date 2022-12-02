@@ -11,7 +11,8 @@ function App({ profile = {
   const [message, setMessage] = useState('')
   const messagesRef = createRef()
   const [isProfileOpen, setIsProfileOpen] = useState(false)
-  const [isProcessing, setIsProcessing] = useState(false)
+  const [isReplying, setIsReplying] = useState(false)
+  const [isFocusing, setIsFocusing] = useState(false)
 
   const scrollToBottom = () => {
     if (messagesRef.current) {
@@ -22,8 +23,6 @@ function App({ profile = {
   useEffect(scrollToBottom, [messagesRef, listMessages]);
 
   function handleKeyDown(e) {
-    if (isProcessing) return
-
     if (e.keyCode === 13 && e.shiftKey === false) {
       e.preventDefault();
       void sendMsg()
@@ -39,11 +38,13 @@ function App({ profile = {
       }])
       setMessage('')
       try {
-        setIsProcessing(true)
+        setTimeout(() => {
+          setIsReplying(true)
+        }, 1000)
         const reply = await getResponseFromAiBot(message);
-        botReply(reply);
+        botReply(reply)
       } finally {
-        setIsProcessing(false)
+        setIsReplying(false)
       }
     }
   }
@@ -99,14 +100,6 @@ function App({ profile = {
             </svg>
           </div>
         </div>
-        <div className="bottom-bar">
-          <textarea rows="1" placeholder="Nhập tin nhắn"
-                    onKeyDown={handleKeyDown}
-                    value={message} onChange={e => setMessage(e.target.value)}/>
-            <div className="send-button">
-              <button disabled={message.length === 0 || isProcessing === true} onClick={() => sendMsg()}>Gửi</button>
-            </div>
-        </div>
         {listMessages.length === 0 && <div className="no-message" onClick={() => setIsProfileOpen(true)}>
           <div className="text">
             <h1>Đây là Bot của <strong>{profile.name}</strong></h1>
@@ -122,8 +115,27 @@ function App({ profile = {
                   {msg.text}
                 </li>
               ))}
+              {isReplying && <li className={'him'}>
+                <div className="ticontainer">
+                  <div className="tiblock">
+                    <div className="tidot"></div>
+                    <div className="tidot"></div>
+                    <div className="tidot"></div>
+                  </div>
+                </div>
+              </li>}
             </ul>
           </div>}
+        <div className="bottom-bar" style={{ bottom: isFocusing ? 0 : 'env(safe-area-inset-bottom)' }}>
+          <textarea rows="1" placeholder="Nhập tin nhắn"
+                    onKeyDown={handleKeyDown}
+                    onFocus={() => setIsFocusing(true)}
+                    onBlur={() => setIsFocusing(false)}
+                    value={message} onChange={e => setMessage(e.target.value)}/>
+          <div className="send-button">
+            <button disabled={message.length === 0} onClick={() => sendMsg()}>Gửi</button>
+          </div>
+        </div>
       </div>
       <ProfilePopup profile={profile} isOpen={isProfileOpen} setIsOpen={setIsProfileOpen} />
     </React.Fragment>
