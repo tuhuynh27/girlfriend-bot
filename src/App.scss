@@ -1,5 +1,5 @@
 .messages-page {
-  position: absolute;
+  position: fixed;
   top: 50%;
   right: 50%;
   transform: translate(50%, -50%);
@@ -11,7 +11,7 @@
   .top-bar {
     height: 45px;
     width: 100%;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     display: flex;
@@ -58,7 +58,7 @@
     padding: 0;
     height: 53px;
     width: 100%;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     border: 1px none #d4d8de;
@@ -104,7 +104,7 @@
 
   .no-message {
     cursor: pointer;
-    position: absolute;
+    position: fixed;
     top: 15%;
     left: 0;
     width: 100%;
