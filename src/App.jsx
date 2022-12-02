@@ -7,7 +7,7 @@ import ProfilePopup from './components/profile-popup/ProfilePopups.jsx'
 
 function App({ profile = {
   name: 'Tu Huynh',
-  image: 'https://scontent.fsin16-1.fna.fbcdn.net/v/t39.30808-6/289245595_548622343482768_4740991614898604935_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=jKDASXP0UucAX_mi-JP&_nc_ht=scontent.fsin16-1.fna&oh=00_AfDQPcfiB6KmY2XgjOnXQXu4khv1Ztt0f5bwUbGDD8ZxjA&oe=63707E87',
+  image: 'https://d33wubrfki0l68.cloudfront.net/19e8b1005d45f56e2c10ad30e215298ce50c677e/6f09c/tu-huynh.jpg',
 }}) {
   const [listMessages, setListMessages] = useState([])
   const [message, setMessage] = useState('')
