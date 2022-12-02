@@ -12,6 +12,7 @@ function App({ profile = {
   const messagesRef = createRef()
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [isFocusing, setIsFocusing] = useState(false)
 
   const scrollToBottom = () => {
     if (messagesRef.current) {
@@ -99,9 +100,11 @@ function App({ profile = {
             </svg>
           </div>
         </div>
-        <div className="bottom-bar">
+        <div className="bottom-bar" style={{ bottom: isFocusing ? '100px' : 0 }}>
           <textarea rows="1" placeholder="Nhập tin nhắn"
                     onKeyDown={handleKeyDown}
+                    onFocus={() => setIsFocusing(true)}
+                    onBlur={() => setIsFocusing(false)}
                     value={message} onChange={e => setMessage(e.target.value)}/>
             <div className="send-button">
               <button disabled={message.length === 0 || isProcessing === true} onClick={() => sendMsg()}>Gửi</button>

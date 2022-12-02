@@ -3,6 +3,7 @@
 }
 
 body {
+  position: absolute;
   margin: 0;
   font-family: 'Noto Sans', sans-serif;
   overflow-y: hidden;
