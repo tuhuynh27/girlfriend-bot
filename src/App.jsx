@@ -1,7 +1,5 @@
-import React, { useState, useEffect, createRef } from 'react'
+import React, { createRef, useEffect, useState } from 'react'
 import './App.scss'
-
-import { process, setScene } from './process.js'
 
 import ProfilePopup from './components/profile-popup/ProfilePopups.jsx'
 
@@ -13,7 +11,8 @@ function App({ profile = {
   const [message, setMessage] = useState('')
   const messagesRef = createRef()
   const [isProfileOpen, setIsProfileOpen] = useState(false)
-  const [processing, setProcessing] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [isInputFocusing, setIsInputFocusing] = useState(false)
 
   const scrollToBottom = () => {
     if (messagesRef.current) {
@@ -23,14 +22,12 @@ function App({ profile = {
 
   useEffect(scrollToBottom, [messagesRef, listMessages]);
 
-  useEffect(() => {
-    setScene('greeting')
-  }, [])
-
   function handleKeyDown(e) {
+    if (isProcessing) return
+
     if (e.keyCode === 13 && e.shiftKey === false) {
       e.preventDefault();
-      sendMsg()
+      void sendMsg()
     }
   }
 
@@ -44,11 +41,11 @@ function App({ profile = {
       }])
       setMessage('')
       try {
-        setProcessing(true)
+        setIsProcessing(true)
         const reply = await getResponseFromAiBot(message);
         botReply(reply);
       } finally {
-        setProcessing(false)
+        setIsProcessing(false)
       }
     }
   }
@@ -56,8 +53,7 @@ function App({ profile = {
   async function getResponseFromAiBot(msg) {
     const resp = await fetch(`https://ai-bot.tuhuynh.com/?text=${msg}`);
     const json = await resp.json();
-    const m = json.msg;
-    return m;
+    return json.msg;
   }
 
   function botReply(msg) {
@@ -81,7 +77,7 @@ function App({ profile = {
   return (
     <React.Fragment>
       <div className="messages-page">
-        <div className="top-bar">
+        <div className="top-bar" style={{ position: isInputFocusing ? 'absolute' : 'fixed' }}>
           <div className="back-button">
             <svg focusable="false" aria-hidden="true" role="presentation" viewBox="0 0 24 24" width="24px" height="24px">
               <path className="Fill($c-pink)"
@@ -105,15 +101,17 @@ function App({ profile = {
             </svg>
           </div>
         </div>
-        <div className="bottom-bar">
+        <div className="bottom-bar" style={{ position: isInputFocusing ? 'absolute' : 'fixed' }}>
         <textarea rows="1" placeholder="Nhập tin nhắn"
                   onKeyDown={handleKeyDown}
+                  onFocus={() => setIsInputFocusing(true)}
+                  onBlur={() => setIsInputFocusing(false)}
                   value={message} onChange={e => setMessage(e.target.value)}/>
           <div className="send-button">
-            <button disabled={message.length === 0 || processing === true} onClick={() => sendMsg()}>Gửi</button>
+            <button disabled={message.length === 0 || isProcessing === true} onClick={() => sendMsg()}>Gửi</button>
           </div>
         </div>
-        {listMessages.length === 0 && <div className="no-message" onClick={() => setIsProfileOpen(true)}>
+        {listMessages.length === 0 && <div className="no-message" onClick={() => setIsProfileOpen(true)} style={{ position: isInputFocusing ? 'absolute' : 'fixed' }}>
           <div className="text">
             <h1>Đây là Bot của <strong>{profile.name}</strong></h1>
             <p>muốn nhắn gì thì nhắn đi</p>
@@ -121,7 +119,7 @@ function App({ profile = {
           <div className="image" style={{ backgroundImage: `url('${profile.image}')` }}/>
         </div>}
         {listMessages.length > 0 &&
-          <div className="conversation" ref={messagesRef}>
+          <div className="conversation" ref={messagesRef} style={{ position: isInputFocusing ? 'absolute' : 'fixed' }}>
             <ul>
               {listMessages.map(msg => (
                 <li key={msg.id} className={msg.isMe ? 'me' : 'him'}>
