@@ -161,7 +161,7 @@
     overflow-y: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    height: 100vh;
+    height: calc(100vh - 46px - 55px);
     &::-webkit-scrollbar {
       display: none; /* for Chrome, Safari, and Opera */
     }
