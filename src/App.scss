@@ -64,6 +64,7 @@
     border: 1px none #d4d8de;
     border-top-style: solid;
     border-bottom-style: solid;
+    z-index: 1000;
 
     display: flex;
     flex-direction: row;
@@ -99,6 +100,7 @@
       border: 0;
       resize: none;
       outline: none;
+      z-index: 2000;
     }
   }
 
