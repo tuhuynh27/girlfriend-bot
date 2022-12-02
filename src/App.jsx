@@ -13,6 +13,7 @@ function App({ profile = {
   const [message, setMessage] = useState('')
   const messagesRef = createRef()
   const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const [processing, setProcessing] = useState(false)
 
   const scrollToBottom = () => {
     if (messagesRef.current) {
@@ -33,27 +34,49 @@ function App({ profile = {
     }
   }
 
-  function sendMsg() {
+  async function sendMsg() {
     if (message.trim() !== '') {
-      botReply(process(message))
+      // botReply(process(message))
       setListMessages(l => [...l, {
         id: Math.random(),
         text: message,
         isMe: true
       }])
       setMessage('')
+      try {
+        setProcessing(true)
+        const reply = await getResponseFromAiBot(message);
+        botReply(reply);
+      } finally {
+        setProcessing(false)
+      }
     }
   }
 
-  function botReply(msg, delay = Math.random() * (3000 - 1000) + 1000) {
-    setTimeout(() => {
-      setListMessages( l => [...l, {
-        id: Math.random(),
-        text: msg,
-        isMe: false
-      }])
-    }, delay)
+  async function getResponseFromAiBot(msg) {
+    const resp = await fetch(`https://ai-bot.tuhuynh.com/?text=${msg}`);
+    const json = await resp.json();
+    const m = json.msg;
+    return m;
   }
+
+  function botReply(msg) {
+    setListMessages( l => [...l, {
+      id: Math.random(),
+      text: msg,
+      isMe: false
+    }])
+  }
+
+  // function botReply(msg, delay = Math.random() * (3000 - 1000) + 1000) {
+  //   setTimeout(() => {
+  //     setListMessages( l => [...l, {
+  //       id: Math.random(),
+  //       text: msg,
+  //       isMe: false
+  //     }])
+  //   }, delay)
+  // }
 
   return (
     <React.Fragment>
@@ -87,7 +110,7 @@ function App({ profile = {
                   onKeyDown={handleKeyDown}
                   value={message} onChange={e => setMessage(e.target.value)}/>
           <div className="send-button">
-            <button disabled={message.length === 0} onClick={() => sendMsg()}>Gửi</button>
+            <button disabled={message.length === 0 || processing === true} onClick={() => sendMsg()}>Gửi</button>
           </div>
         </div>
         {listMessages.length === 0 && <div className="no-message" onClick={() => setIsProfileOpen(true)}>
